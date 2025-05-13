@@ -6,7 +6,7 @@
 metaData <- getGEO(filename="~/Downloads/GSE000000_series_matrix.txt.gz")
 countMatrix <- read.table('GSE000000_read_counts.txt', fill=TRUE, header=TRUE) 
 ```
-2. Next perform a PCA on the count matrix.
+2. Next perform a **PCA** on the count matrix.
 ```
 # PCA using prcomp
 results <- prcomp(countMatrix, scale=F)$rotation %>% as.data.frame() %>% rownames_to_column('Sample')
