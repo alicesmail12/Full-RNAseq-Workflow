@@ -20,7 +20,7 @@ ggplot(results, aes(x=PC1, y=PC2, colour=Sample, label=Sample))+
 ```
 
 ### Variance Partitioning
-3. Next I can perform variance partitioning to see how each meta variable contributes to the variation in the counts of each gene. First the data needs to be normalised using DESeq2, and then fitExtractVarPartModel() can be used to model the effect of each variable on each gene across all the samples.
+3. Next I can perform **variance partitioning** to see how each meta variable contributes to the variation in the counts of each gene. First the data needs to be normalised using **DESeq2**, and then fitExtractVarPartModel() can be used to model the effect of each variable on each gene across all the samples.
 ```
 library(variancePartition)
 library(DESeq2)
@@ -47,7 +47,6 @@ varPart <- fitExtractVarPartModel(quantLog, form, metaDataCopy)
 vp <- sortCols(varPart)
 plotPercentBars(vp[1:20, ])
 plotVarPart(vp)
-
 ```
 
 
