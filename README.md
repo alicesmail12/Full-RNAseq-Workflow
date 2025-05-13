@@ -37,17 +37,77 @@ isexpr <- rowSums(fpm(dds) > 1) >= 0.5 * ncol(dds)
 # Compute log2 Fragments Per Million
 quantLog <- log2(fpm(dds)[isexpr, ] + 1)
 
-# Define formula
+# Define formula using each variable
 form <- ~ (1 | group) + (1 | ageBracket) + (1 | sex) 
 
 # Run variancePartition analysis
-varPart <- fitExtractVarPartModel(quantLog, form, metaDataCopy)
+varPart <- fitExtractVarPartModel(quantLog, form, metaData)
 
 # Visualise
 vp <- sortCols(varPart)
 plotPercentBars(vp[1:20, ])
 plotVarPart(vp)
 ```
+### Differential Expression Analysis
+4. Next I can use DESeq2 to normalise the counts and perform **DE analysis**.
+```
+# Check sample names match between meta and count data
+all(colnames(countMatrix) %in% rownames(metaData))
+all(colnames(countMatrix) == rownames(metaData))
+
+# Create deseq object
+dds <- DESeqDataSetFromMatrix(countData=countMatrix, colData=metaData, design=~group+sex)
+dds <- DESeq(dds)
+res <- results(dds, contrast=c("group","Case","Control")) %>% as.data.frame() %>% rownames_to_column('ensembl_gene_id')
+resultsNames(dds)
+resLFC <- lfcShrink(dds, coef="group_Control_vs_Case", type="apeglm")
+
+# Plot one gene
+plotCounts(dds, gene='ENSG00000017427', intgroup="group")
+
+# Plot PCA of normalised gene counts
+vsd <- vst(dds, blind=FALSE)
+plotPCA(vsd, intgroup=c("group")) +
+  theme_bw() +
+  theme(#legend.title=element_blank(),
+    text=element_text(size=16, family='Roboto'),
+    strip.background=element_rect(colour=NA, fill='white'),
+    panel.grid=element_blank()) 
+
+# Add gene symbols
+gene_symbol <- select(EnsDb.Hsapiens.v86, 
+                      keys=as.character(res$ensembl_gene_id) ,
+                      keytype="GENEID",
+                      columns=c("GENEID", "GENENAME"))
+colnames(gene_symbol) <- c("ensembl_gene_id", "geneName")
+res <- left_join(res, gene_symbol, by="ensembl_gene_id") %>% dplyr::filter(!is.na(geneName))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
