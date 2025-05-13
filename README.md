@@ -58,21 +58,13 @@ all(colnames(countMatrix) == rownames(metaData))
 # Create deseq object
 dds <- DESeqDataSetFromMatrix(countData=countMatrix, colData=metaData, design=~group+sex)
 dds <- DESeq(dds)
+
+# Get results
 res <- results(dds, contrast=c("group","Case","Control")) %>% as.data.frame() %>% rownames_to_column('ensembl_gene_id')
 resultsNames(dds)
+
+# Get results with shrinkage applied
 resLFC <- lfcShrink(dds, coef="group_Control_vs_Case", type="apeglm")
-
-# Plot one gene
-plotCounts(dds, gene='ENSG00000017427', intgroup="group")
-
-# Plot PCA of normalised gene counts
-vsd <- vst(dds, blind=FALSE)
-plotPCA(vsd, intgroup=c("group")) +
-  theme_bw() +
-  theme(#legend.title=element_blank(),
-    text=element_text(size=16, family='Roboto'),
-    strip.background=element_rect(colour=NA, fill='white'),
-    panel.grid=element_blank()) 
 
 # Add gene symbols
 gene_symbol <- select(EnsDb.Hsapiens.v86, 
@@ -80,7 +72,16 @@ gene_symbol <- select(EnsDb.Hsapiens.v86,
                       keytype="GENEID",
                       columns=c("GENEID", "GENENAME"))
 colnames(gene_symbol) <- c("ensembl_gene_id", "geneName")
-res <- left_join(res, gene_symbol, by="ensembl_gene_id") %>% dplyr::filter(!is.na(geneName))
+resLFC <- left_join(resLFC, gene_symbol, by="ensembl_gene_id") %>% dplyr::filter(!is.na(geneName))
+```
+5. I can also make lots of plots!
+```
+# Plot one gene
+plotCounts(dds, gene='ENSG00000017427', intgroup="group")
+
+# Plot PCA of normalised gene counts
+vsd <- vst(dds, blind=FALSE)
+plotPCA(vsd, intgroup=c("group"))
 ```
 
 
