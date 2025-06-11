@@ -28,7 +28,7 @@ countMatrixSym <- merge(countMatrix, gene_symbol, by.x='geneID', by.y='GENEID')
 countMatrixSym <- countMatrixSym[!duplicated(countMatrixSym[c('GENENAME')]), ]
 ```
 2. Make sure the column names in the **count matrix** match the rownames in the **meta table**.
-```
+```r
 # Create column and count data
 metaMatrix <- metaFilt %>% remove_rownames %>% column_to_rownames(var="Sample")
 countMatrix <- countMatrixSym %>% remove_rownames %>% column_to_rownames(var="GENENAME")
@@ -42,7 +42,7 @@ all(colnames(countMatrix) == rownames(metaMatrix))
 ```
 ### Variance Partitioning
 3. Next I can perform **variance partitioning** to see how each meta variable contributes to the variation in the counts of each gene. First the data needs to be normalised using **DESeq2**, and then fitExtractVarPartModel() can be used to model the effect of each variable on each gene across all the samples.
-```
+```r
 # Packages
 library(variancePartition)
 library(DESeq2)
@@ -72,7 +72,7 @@ vp <- sortCols(varPart)
 ```
 ### Differential Expression Analysis
 4. Next I can use **DESeq2** to perform **DE analysis**.
-```
+```r
 # Create deseq object
 dds <- DESeqDataSetFromMatrix(countData=countMatrix, colData=metaData, design=~group+sex)
 dds <- DESeq(dds)
@@ -89,7 +89,7 @@ resLFC %>% arrange(padj)
 ```
 ### Gene Set Enrichment Analysis (GSEA)
 5. Finally, I like using **fgsea** to see if any pathways are up or downregulated.
-```
+```r
 # Packages
 library(fgsea)
 
