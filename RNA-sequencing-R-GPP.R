@@ -12,6 +12,7 @@ workingDir = {wd}
 setwd(workingDir)
 
 ## FUNCTIONS ###################################################################
+# Plot DESEQ results
 makeVolcanoPlot <- function(resLFC){
   
   # Edit colours and labels
