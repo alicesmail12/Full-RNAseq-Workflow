@@ -71,7 +71,7 @@ varPart <- fitExtractVarPartModel(quantLog, form, metaData)
 vp <- sortCols(varPart)
 ```
 ### Differential Expression Analysis
-4. Next I can use **DESeq2** to normalise the counts and perform **DE analysis**.
+4. Next I can use **DESeq2** to perform **DE analysis**.
 ```
 # Create deseq object
 dds <- DESeqDataSetFromMatrix(countData=countMatrix, colData=metaData, design=~group+sex)
