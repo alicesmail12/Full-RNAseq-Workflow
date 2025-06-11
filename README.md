@@ -8,19 +8,8 @@ library(GEOquery)
 metaData <- getGEO(filename="~/Downloads/GSE000000_series_matrix.txt.gz")
 countMatrix <- read.table('GSE000000_read_counts.txt', fill=TRUE, header=TRUE) 
 ```
-2. Next perform a **PCA** on the count matrix.
-```
-# PCA using prcomp
-results <- prcomp(countMatrix, scale=F)$rotation %>% as.data.frame() %>% rownames_to_column('Sample')
-
-# Plot
-ggplot(results, aes(x=PC1, y=PC2, colour=Sample, label=Sample))+
-  geom_point()+
-  geom_text(colour='black')
-```
-
 ### Variance Partitioning
-3. Next I can perform **variance partitioning** to see how each meta variable contributes to the variation in the counts of each gene. First the data needs to be normalised using **DESeq2**, and then fitExtractVarPartModel() can be used to model the effect of each variable on each gene across all the samples.
+2. Next I can perform **variance partitioning** to see how each meta variable contributes to the variation in the counts of each gene. First the data needs to be normalised using **DESeq2**, and then fitExtractVarPartModel() can be used to model the effect of each variable on each gene across all the samples.
 ```
 library(variancePartition)
 library(DESeq2)
@@ -49,7 +38,7 @@ plotPercentBars(vp[1:20, ])
 plotVarPart(vp)
 ```
 ### Differential Expression Analysis
-4. Next I can use DESeq2 to normalise the counts and perform **DE analysis**.
+3. Next I can use DESeq2 to normalise the counts and perform **DE analysis**.
 ```
 # Check sample names match between meta and count data
 all(colnames(countMatrix) %in% rownames(metaData))
@@ -66,15 +55,17 @@ resultsNames(dds)
 # Get results with shrinkage applied
 resLFC <- lfcShrink(dds, coef="group_Control_vs_Case", type="apeglm")
 
-# Add gene symbols
+# Get gene symbols
 gene_symbol <- select(EnsDb.Hsapiens.v86, 
                       keys=as.character(res$ensembl_gene_id) ,
                       keytype="GENEID",
                       columns=c("GENEID", "GENENAME"))
+
+# Add gene symbols
 colnames(gene_symbol) <- c("ensembl_gene_id", "geneName")
 resLFC <- left_join(resLFC, gene_symbol, by="ensembl_gene_id") %>% dplyr::filter(!is.na(geneName))
 ```
-5. I can also make lots of plots!
+4. Now I can also make lots of plots!
 ```
 # Plot one gene
 plotCounts(dds, gene='ENSG00000017427', intgroup="group")
