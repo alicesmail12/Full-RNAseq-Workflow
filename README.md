@@ -48,7 +48,7 @@ library(variancePartition)
 library(DESeq2)
 
 # Create DESeqDataSet object
-dds <- DESeqDataSetFromMatrix(countData = countMatrix, colData = metaMatrix, design = ~1)
+dds <- DESeqDataSetFromMatrix(countData=countMatrix, colData=metaMatrix, design=~1)
 
 # Median of ratios method for normalisation
 dds <- estimateSizeFactors(dds)
