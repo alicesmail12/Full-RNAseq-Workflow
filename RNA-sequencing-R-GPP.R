@@ -8,20 +8,20 @@ library(EnsDb.Hsapiens.v86)
 library(variancePartition)
 
 # Set directory
-workingDir = '/Users/alicesmail/Desktop/2022-2024/KCL/RNAseq-GPP/'
+workingDir = {wd}
 setwd(workingDir)
 
 ## FUNCTIONS ###################################################################
-makeVolcanoPlot <- function(resLFCGeneSymFilt){
+makeVolcanoPlot <- function(resLFC){
   
   # Edit colours and labels
-  resLFCGeneSymFilt$Label <- ifelse((resLFCGeneSymFilt$padj<0.05)&(abs(resLFCGeneSymFilt$log2FoldChange)>6), resLFCGeneSymFilt$Gene, NA)
-  resLFCGeneSymFilt$Colour <- ifelse((resLFCGeneSymFilt$padj<0.05)&((resLFCGeneSymFilt$log2FoldChange)>0.5), 'Increased', 'None')
-  resLFCGeneSymFilt$Colour <- ifelse((resLFCGeneSymFilt$padj<0.05)&((resLFCGeneSymFilt$log2FoldChange)<(-0.5)), 'Decreased', resLFCGeneSymFilt$Colour)
-  resLFCGeneSymPlot <- resLFCGeneSymFilt %>% dplyr::filter(!is.na(padj))
+  resLFC$Label <- ifelse((resLFC$padj<0.05)&(abs(resLFC$log2FoldChange)>6), resLFC$Gene, NA)
+  resLFC$Colour <- ifelse((resLFC$padj<0.05)&((resLFC$log2FoldChange)>0.5), 'Increased', 'None')
+  resLFC$Colour <- ifelse((resLFC$padj<0.05)&((resLFC$log2FoldChange)<(-0.5)), 'Decreased', resLFC$Colour)
+  resLFCPlot <- resLFC %>% dplyr::filter(!is.na(padj))
   
   # Plot
-  plot <- ggplot(resLFCGeneSymPlot, aes(x=log2FoldChange, y=-log10(padj), label=Label, colour=Colour, size=abs(log2FoldChange)*(-log10(padj))))+
+  plot <- ggplot(resLFCPlot, aes(x=log2FoldChange, y=-log10(padj), label=Label, colour=Colour, size=abs(log2FoldChange)*(-log10(padj))))+
     geom_hline(yintercept=-log10(0.05), colour='grey')+
     geom_vline(xintercept=c(0.5,-0.5), colour='grey')+
     geom_point(alpha=0.75)+
@@ -223,7 +223,7 @@ resLFCList <- sort(resLFCList, decreasing=T)
 resLFCList <- resLFCList[!duplicated(names(resLFCList))]
 
 # Get GO BP gmt file
-GO_file <- "/Users/alicesmail/Desktop/Newcastle/m.1661/RNAseq-Data/GOMF.txt"
+GO_file <- "GOMF.txt"
 GO=fgsea::gmtPathways(GO_file)
 
 # Run FGSEA
