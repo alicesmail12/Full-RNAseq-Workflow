@@ -1,5 +1,6 @@
 # RNA Sequencing Analysis in R
-Basic analysis of publically available PPP RNA-seq dataset at www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-11144?query=GPP%20baum%20schmid.
+Basic analysis of publically available PPP RNA-seq dataset avaliable at www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-11144?query=GPP%20baum%20schmid.
+
 **Publication for Dataset:** Baum et al. (2022) *Pustular psoriasis: Molecular pathways and effects of spesolimab in generalized pustular psoriasis.* The Journal of Allergy and Clinical Immunology. 149(4):1402-1412.
 
 ## Overview
