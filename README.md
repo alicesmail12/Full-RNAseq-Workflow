@@ -1,13 +1,20 @@
 # Full RNAseq Workflow in R
+Basic analysis of publically available PPP RNAseq dataset.
+
+**Publication for Dataset:** Baum et al. (2022) *Pustular psoriasis: Molecular pathways and effects of spesolimab in generalized pustular psoriasis.* The Journal of Allergy and Clinical Immunology. 149(4):1402-1412.
+
+## Overview of Steps
 ### Loading and Checking Data
 1. Read in a **count matrix** (read counts for each sample) and a **meta table** (containing information about each sample). For example, if using a GEO dataset use:
 ```
+# Packages
 library(GEOquery)
 
 # Read count and meta data
 metaData <- getGEO(filename="~/Downloads/GSE000000_series_matrix.txt.gz")
 countMatrix <- read.table('GSE000000_read_counts.txt', fill=TRUE, header=TRUE) 
 ```
+In the example script I use a meta table and count table from www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-11144?query=GPP%20baum%20schmid. 
 ### Variance Partitioning
 2. Next I can perform **variance partitioning** to see how each meta variable contributes to the variation in the counts of each gene. First the data needs to be normalised using **DESeq2**, and then fitExtractVarPartModel() can be used to model the effect of each variable on each gene across all the samples.
 ```
