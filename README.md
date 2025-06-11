@@ -7,7 +7,7 @@ Basic analysis of publically available PPP RNA-seq dataset avaliable at www.ebi.
 ### Loading and Checking Data
 1. Read in a **count matrix** (read counts for each sample) and a **meta table** (containing information about each sample). For example, if using a GEO dataset:
 ```
-# Packages
+*# Packages*
 library(GEOquery)
 library(EnsDb.Hsapiens.v86)
 
